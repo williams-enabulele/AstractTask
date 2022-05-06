@@ -68,6 +68,7 @@ namespace AstractTask.Infrastruture.Repository
         {
             var user = _mapper.Map<ApplicationUser>(registerDto);
             user.UserName = registerDto.Email;
+            user.EmailConfirmed = true;
             var response = new Response<string>();
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
@@ -98,13 +99,6 @@ namespace AstractTask.Infrastruture.Repository
                 response.Message = "Invalid Credentials";
                 response.Succeeded = false;
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
-                return response;
-            }
-            else if (!await _userManager.IsEmailConfirmedAsync(user))
-            {
-                response.Message = "Account not activated";
-                response.Succeeded = false;
-                response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return response;
             }
             else

@@ -29,8 +29,4 @@
     <ProjectReference Include="..\AstractTask.Infrastructure\AstractTask.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Certificates\" />
-  </ItemGroup>
-
 </Project>

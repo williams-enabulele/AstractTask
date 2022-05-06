@@ -1,6 +1,6 @@
 ﻿namespace AstractTask.Domain.DTOs
 {
-    public class UpdateTaskDTO
+    public class TaskResponseDTO
     {
         public string Id { get; set; }
         public string Title { get; set; }

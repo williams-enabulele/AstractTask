@@ -9,8 +9,9 @@ namespace AstractTask.Domain.Entities
 
         public string Description { get; set; }
         public Boolean IsCompleted { get; set; }
+        public string DeadLine { get; set; }
         public string TaskCategoryId { get; set; }
         public string UserId { get; set; }
-        public TaskCategory TaskCategory { get; set; } = null;
+        public TaskCategory TaskCategory { get; set; }
     }
 }

@@ -13,6 +13,7 @@ namespace AstractTask.Domain.Utilities
             CreateMap<ApplicationUser, RegisterDTO>().ReverseMap();
             CreateMap<ApplicationUser, LoginDTO>().ReverseMap();
             CreateMap<TaskItem, TaskDTO>().ReverseMap();
+            CreateMap<TaskItem, TaskResponseDTO>().ReverseMap();
             CreateMap<TaskItem, UpdateTaskDTO>().ReverseMap();
             CreateMap<TaskCategory, CategoryDTO>().ReverseMap();
             CreateMap<CategoryResponseDTO, TaskCategory>().ReverseMap();

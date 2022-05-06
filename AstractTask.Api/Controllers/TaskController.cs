@@ -36,15 +36,15 @@ namespace AstractTask.Api.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateTask")]
+        [Route("UpdateTask/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(Policy = Policies.AdminAndUser)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult UpdateTask([FromBody] UpdateTaskDTO taskDTO)
+        public IActionResult UpdateTask([FromRoute] string id, [FromBody] UpdateTaskDTO taskDTO)
         {
-            var result = _taskService.UpdateTask(taskDTO);
+            var result = _taskService.UpdateTask(id, taskDTO);
             return StatusCode(result.Result.StatusCode, result.Result);
         }
 

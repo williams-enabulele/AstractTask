@@ -7,12 +7,12 @@ namespace AstractTask.Domain.Interfaces
     {
         Task<Response<bool>> AddTask(TaskDTO taskDto);
 
-        Task<Response<IEnumerable<TaskDTO>>> GetTasks();
+        Task<Response<IEnumerable<TaskResponseDTO>>> GetTasks();
 
-        Task<Response<bool>> UpdateTask(UpdateTaskDTO taskDTO);
+        Task<Response<bool>> UpdateTask(string id, UpdateTaskDTO taskDTO);
 
         Task<Response<bool>> DeleteTask(string id);
 
-        Task<Response<IEnumerable<TaskDTO>>> GetTasksByUser(string userId);
+        Task<Response<IEnumerable<TaskResponseDTO>>> GetTasksByUser(string userId);
     }
 }

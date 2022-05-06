@@ -78,13 +78,6 @@ builder.Services.AddScoped<RoleManager<IdentityRole>>();
 builder.Services.AddScoped<ITaskCategoryService, TaskCategoryService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 
-
-builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(@"C:\temp-keys\"))
-                .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
-                {
-                    EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
-                    ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
-                }); ;
 builder.Logging.AddJsonConsole();
 var app = builder.Build();
 // Logging
@@ -102,13 +95,10 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-
-      logger.LogError( ex, "An error occured while attempting to create DB");
+        logger.LogError(ex, "An error occured while attempting to create DB");
     }
-
 }
 
- 
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -121,8 +111,9 @@ app.UseCors(x => x
         .AllowAnyMethod()
         .AllowAnyHeader());
 app.MapControllers();
-string? port = Environment.GetEnvironmentVariable("PORT"); 
-if (!string.IsNullOrWhiteSpace(port)) 
-{ app.Urls.Add("http://*:" + port); 
+string? port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrWhiteSpace(port))
+{
+    app.Urls.Add("http://*:" + port);
 }
 app.Run();

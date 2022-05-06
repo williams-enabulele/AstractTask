@@ -31,7 +31,7 @@ namespace AstractTask.Infrastruture.Services
 
                 return response;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 response.Message = "An error occured";
                 response.Succeeded = false;
@@ -40,13 +40,14 @@ namespace AstractTask.Infrastruture.Services
             }
         }
 
-        public async Task<Response<IEnumerable<TaskDTO>>> GetTasks()
+        public async Task<Response<IEnumerable<TaskResponseDTO>>> GetTasks()
         {
-            var response = new Response<IEnumerable<TaskDTO>>();
+            var response = new Response<IEnumerable<TaskResponseDTO>>();
             try
             {
                 var tasks = _unitOfWork.TaskItem.GetAll();
-                var items = _mapper.Map<IEnumerable<TaskDTO>>(tasks);
+                var items = _mapper.Map<IEnumerable<TaskResponseDTO>>(tasks);
+
                 response.StatusCode = (int)HttpStatusCode.OK;
                 response.Message = "Successfully fetched";
                 response.Succeeded = true;
@@ -62,22 +63,33 @@ namespace AstractTask.Infrastruture.Services
             }
         }
 
-        public async Task<Response<bool>> UpdateTask(UpdateTaskDTO taskDTO)
+        public async Task<Response<bool>> UpdateTask(string id, UpdateTaskDTO taskDTO)
         {
-            var taskItem = _mapper.Map<TaskItem>(taskDTO);
+            var item = _unitOfWork.TaskItem.GetById(id);
             var response = new Response<bool>();
-            try
+            if (item != null)
             {
-                _unitOfWork.TaskItem.Update(taskItem);
-                _unitOfWork.Complete();
-                response.StatusCode = (int)HttpStatusCode.OK;
-                response.Message = "Task Updated";
-                response.Succeeded = true;
-                return response;
+                var taskItem = _mapper.Map<TaskItem>(taskDTO);
+                try
+                {
+                    _unitOfWork.TaskItem.Update(taskItem);
+                    _unitOfWork.Complete();
+                    response.StatusCode = (int)HttpStatusCode.OK;
+                    response.Message = "Task Updated";
+                    response.Succeeded = true;
+                    return response;
+                }
+                catch (Exception ex)
+                {
+                    response.Message = "Task was not updated!";
+                    response.Succeeded = false;
+                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    return response;
+                }
             }
-            catch (Exception)
+            else
             {
-                response.Message = "An error occured";
+                response.Message = "An error occured, ensure an id is sent along with the request";
                 response.Succeeded = false;
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return response;
@@ -91,6 +103,7 @@ namespace AstractTask.Infrastruture.Services
             {
                 var task = _unitOfWork.TaskItem.GetById(id);
                 _unitOfWork.TaskItem.Remove(task);
+                _unitOfWork.Complete();
                 response.StatusCode = (int)HttpStatusCode.OK;
                 response.Message = "Task Deleted";
                 response.Succeeded = true;
@@ -105,13 +118,13 @@ namespace AstractTask.Infrastruture.Services
             }
         }
 
-        public async Task<Response<IEnumerable<TaskDTO>>> GetTasksByUser(string userId)
+        public async Task<Response<IEnumerable<TaskResponseDTO>>> GetTasksByUser(string userId)
         {
-            var response = new Response<IEnumerable<TaskDTO>>();
+            var response = new Response<IEnumerable<TaskResponseDTO>>();
             try
             {
-                var userTasks = _unitOfWork.TaskItem.Find(x => x.UserId == userId).ToList();
-                var items = _mapper.Map<IEnumerable<TaskDTO>>(userTasks);
+                var userTasks = _unitOfWork.TaskItem.Find(x => x.UserId == userId);
+                var items = _mapper.Map<IEnumerable<TaskResponseDTO>>(userTasks);
                 response.StatusCode = (int)HttpStatusCode.OK;
                 response.Message = "Successfully fetched";
                 response.Succeeded = true;
